@@ -1,6 +1,7 @@
 import requests
 import csv
 import time
+from drive_upload import upload_to_drive
 
 API_KEY = "srUWrqH5wE-RiP_RtNjq-g"
 HEADERS = {
@@ -72,7 +73,6 @@ def generate_emails(company_name):
     domain = None
     pattern = None
 
-    # Reveal one email
     for contact in contacts:
         if contact.get("id"):
             try:
@@ -106,7 +106,7 @@ def generate_emails(company_name):
     return results
 
 
-def save_to_csv(data, filename="apollo_contacts.csv"):
+def save_to_csv(data, filename):
     keys = ["First Name", "Last Name", "Title", "Email"]
     with open(filename, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=keys)
@@ -116,6 +116,15 @@ def save_to_csv(data, filename="apollo_contacts.csv"):
 
 if __name__ == "__main__":
     company = "Brandl Nutrition"  # 👈 Change this to any company name
+    filename = f"{company.replace(' ', '_')}_contacts.csv"
+
     contacts = generate_emails(company)
-    save_to_csv(contacts)
+    save_to_csv(contacts, filename)
     print(f"✅ Saved {len(contacts)} contacts to CSV")
+
+    try:
+        link = upload_to_drive(filename)
+        print(f"📁 Uploaded to Drive: {link}")
+    except Exception as e:
+        print(f"⚠️ Failed to upload to Drive: {e}")
+
