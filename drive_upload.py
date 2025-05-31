@@ -1,3 +1,9 @@
+import os
+import json  # 👈 THIS is the line you were missing
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
+
 def upload_to_drive(filename):
     credentials_info = json.loads(os.environ["GOOGLE_CREDENTIALS"])
 
@@ -11,7 +17,7 @@ def upload_to_drive(filename):
     file_metadata = {
         'name': filename,
         'parents': ['1vIZc_2DqNgwZm3dFFW5GpPvm_zZzgaMo'],  # 👈 your folder ID
-        'mimeType': 'application/vnd.google-apps.spreadsheet'  # Optional
+        'mimeType': 'application/vnd.google-apps.spreadsheet'
     }
 
     media = MediaFileUpload(filename, mimetype='text/csv')
@@ -35,3 +41,4 @@ def upload_to_drive(filename):
 
     shareable_link = f"https://drive.google.com/file/d/{file_id}/view?usp=sharing"
     return shareable_link
+
