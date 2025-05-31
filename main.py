@@ -13,10 +13,10 @@ HEADERS = {
 BASE_URL = "https://api.apollo.io/v1"
 
 
-def search_people(company_name, page=1):
+def search_people(company_domain, page=1):
     url = f"{BASE_URL}/people/match"
     payload = {
-        "q_organization_name": company_name,
+        "q_organization_domains": [company_domain],
         "page": page
     }
     response = requests.post(url, json=payload, headers=HEADERS)
@@ -61,9 +61,9 @@ def apply_pattern(pattern, first, last):
     return pattern.format(first=first.lower(), last=last.lower(), f=f)
 
 
-def generate_emails(company_name):
-    print(f"🔍 Searching contacts at: {company_name}")
-    data = search_people(company_name)
+def generate_emails(company_domain):
+    print(f"🔍 Searching contacts at: {company_domain}")
+    data = search_people(company_domain)
     contacts = data.get("people", [])
     if not contacts:
         print("❌ No contacts found.")
@@ -115,10 +115,10 @@ def save_to_csv(data, filename):
 
 
 if __name__ == "__main__":
-    company = "Brandl Nutrition"  # 👈 Change this to any company name
-    filename = f"{company.replace(' ', '_')}_contacts.csv"
+    company_domain = "brandl-nutrition.de"
+    filename = f"{company_domain.replace('.', '_')}_contacts.csv"
 
-    contacts = generate_emails(company)
+    contacts = generate_emails(company_domain)
     save_to_csv(contacts, filename)
     print(f"✅ Saved {len(contacts)} contacts to CSV")
 
@@ -127,4 +127,5 @@ if __name__ == "__main__":
         print(f"📁 Uploaded to Drive: {link}")
     except Exception as e:
         print(f"⚠️ Failed to upload to Drive: {e}")
+
 
