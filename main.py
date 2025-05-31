@@ -115,7 +115,7 @@ def save_to_csv(data, filename):
 
 
 if __name__ == "__main__":
-    company_domain = "brandl-nutrition.de"
+    company_domain = "nike.com"
     filename = f"{company_domain.replace('.', '_')}_contacts.csv"
 
     contacts = generate_emails(company_domain)
